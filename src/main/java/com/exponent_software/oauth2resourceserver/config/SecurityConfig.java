@@ -64,6 +64,8 @@ public class SecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests( r -> r.requestMatchers("/api/user/signup").permitAll());
+        http.authorizeHttpRequests( r -> r.requestMatchers("/api/admin/signup").permitAll());
+        http.authorizeHttpRequests( r -> r.requestMatchers("/api/manager/signup").permitAll());
         http.authorizeHttpRequests( r -> r.requestMatchers("/api/user/login").authenticated());
         http.authorizeHttpRequests( r -> r.requestMatchers("/api/auth/getToken").hasAnyAuthority("USER","ADMIN", "MANAGER"));
         http.authorizeHttpRequests( r -> r.anyRequest().hasAnyAuthority("SCOPE_USER", "SCOPE_WRITE"));

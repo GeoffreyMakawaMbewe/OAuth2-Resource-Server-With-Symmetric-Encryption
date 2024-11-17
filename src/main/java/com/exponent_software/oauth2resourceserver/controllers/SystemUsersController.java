@@ -27,9 +27,20 @@ public class SystemUsersController {
         UserDetails userDetails = systemUserService.loadUserByUsername(authentication.getName());
         return "successfully logged in";
     }
+
     @PostMapping(path = "/user/signup")
     public AppUser signupUser(@RequestBody AppUser appUser){
         return systemUserService.signUpAsUser(appUser);
+    }
+
+    @PostMapping(path = "/admin/signup")
+    public AppUser adminSignup(@RequestBody AppUser appUser){
+      return systemUserService.signUpAsAdmin(appUser);
+    }
+
+    @PostMapping(path = "/manager/signup")
+    public AppUser managerSignup(@RequestBody AppUser appUser){
+      return systemUserService.signUpAsManager(appUser);
     }
 
 }

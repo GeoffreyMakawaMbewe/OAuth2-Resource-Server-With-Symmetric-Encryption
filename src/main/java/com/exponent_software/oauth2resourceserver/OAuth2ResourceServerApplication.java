@@ -16,7 +16,7 @@ public class OAuth2ResourceServerApplication {
         SpringApplication.run(OAuth2ResourceServerApplication.class, args);
     }
 
-    @Bean
+//    @Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository) {
         return args -> {
             System.out.println("Hello World");
