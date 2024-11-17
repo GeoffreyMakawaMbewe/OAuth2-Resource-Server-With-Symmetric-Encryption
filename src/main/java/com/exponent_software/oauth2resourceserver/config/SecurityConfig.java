@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -38,22 +39,22 @@ public class SecurityConfig {
     private String JWkey ;
 
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        System.out.println(JWkey);
-        var user1 = User
-                .withUsername("Geoffrey")
-                .password("password")
-                .authorities("READ","WRITE","ROLE_USER")
-                .build();
-        var udm = new InMemoryUserDetailsManager();
-        udm.createUser(user1);
-
-        return udm;
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        System.out.println(JWkey);
+//        var user1 = AppUser
+//                .withUsername("Geoffrey")
+//                .password("password")
+//                .authorities("READ","WRITE","ROLE_USER")
+//                .build();
+//        var udm = new InMemoryUserDetailsManager();
+//        udm.createUser(user1);
+//
+//        return udm;
+//    }
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean
@@ -61,8 +62,12 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.authorizeHttpRequests( request -> request.requestMatchers("/api/auth/getToken").hasRole("USER"));
-        http.authorizeHttpRequests( request -> request.anyRequest().hasAuthority("SCOPE_READ"));
+
+        http.authorizeHttpRequests( r -> r.requestMatchers("/api/user/signup").permitAll());
+        http.authorizeHttpRequests( r -> r.requestMatchers("/api/user/login").authenticated());
+        http.authorizeHttpRequests( r -> r.requestMatchers("/api/auth/getToken").hasAnyAuthority("USER","ADMIN", "MANAGER"));
+        http.authorizeHttpRequests( r -> r.anyRequest().hasAnyAuthority("SCOPE_USER", "SCOPE_WRITE"));
+
         http.httpBasic(Customizer.withDefaults());
 
         http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
