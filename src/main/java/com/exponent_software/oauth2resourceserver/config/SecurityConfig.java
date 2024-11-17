@@ -68,7 +68,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests( r -> r.requestMatchers("/api/manager/signup").permitAll());
         http.authorizeHttpRequests( r -> r.requestMatchers("/api/user/login").authenticated());
         http.authorizeHttpRequests( r -> r.requestMatchers("/api/auth/getToken").hasAnyAuthority("USER","ADMIN", "MANAGER"));
-        http.authorizeHttpRequests( r -> r.anyRequest().hasAnyAuthority("SCOPE_USER", "SCOPE_WRITE"));
+//        http.authorizeHttpRequests( r -> r.anyRequest().hasAnyAuthority("SCOPE_USER", "SCOPE_WRITE"));
+        http.authorizeHttpRequests( r -> r.requestMatchers("/greet/user").hasAuthority("SCOPE_USER"));
+        http.authorizeHttpRequests( r -> r.requestMatchers("/greet/admin").hasAuthority("SCOPE_ADMIN"));
+        http.authorizeHttpRequests( r -> r.requestMatchers("/greet/manager").hasAuthority("SCOPE_MANAGER"));
 
         http.httpBasic(Customizer.withDefaults());
 
