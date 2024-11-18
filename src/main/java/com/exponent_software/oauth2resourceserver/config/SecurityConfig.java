@@ -80,7 +80,6 @@ public class SecurityConfig {
         return http
                 .build();
     }
-
     @Bean
     public JwtEncoder jwtEncoder() {
         JwtEncoder jwtEncoder= new NimbusJwtEncoder(new ImmutableSecret<>(JWkey.getBytes()));
